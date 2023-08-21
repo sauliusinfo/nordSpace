@@ -27,12 +27,31 @@
                                 <td>{{ $consumption->water }}</td>
                                 <td>{{ $consumption->electricity }}</td>
                                 <td>
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#imageModal">
+                                    <a href="#" data-bs-toggle="modal"
+                                        data-bs-target="#imageModal{{ $consumption->id }}">
                                         <img class="small-image" src="{{ asset('images/' . $consumption->image_path) }}"
                                             alt="image">
                                     </a>
                                 </td>
                             </tr>
+
+                            <div class="modal fade" id="imageModal{{ $consumption->id }}" tabindex="-1"
+                                aria-labelledby="imageModalLabel{{ $consumption->id }}" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="imageModalLabel{{ $consumption->id }}">Consumption
+                                                of {{ $consumption->date }}</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <img src="{{ asset('images/' . $consumption->image_path) }}" class="img-fluid"
+                                                alt="image">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
                         @empty
                             <tr>
@@ -43,22 +62,6 @@
                         @endforelse
                     </tbody>
                 </table>
-
-                <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="imageModalLabel">Consumption of {{ $consumption->date }}</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <img src="{{ asset('images/' . $consumption->image_path) }}" class="img-fluid"
-                                    alt="image">
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
                 <div data-bs-theme="dark">
                     {{ $consumptions->links('pagination::bootstrap-5') }}
