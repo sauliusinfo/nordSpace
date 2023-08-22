@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Consumption;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -13,7 +14,7 @@ class ConsumptionController extends Controller
      */
     public function index()
     {
-        $consumptions = Consumption::select('consumptions.*')->orderBy('date', 'asc')->paginate(5);
+        $consumptions = Consumption::select('consumptions.*')->orderBy('id', 'asc')->paginate(5);
 
         return view('consumptions.index', [
             'consumptions' => $consumptions
@@ -25,7 +26,13 @@ class ConsumptionController extends Controller
      */
     public function create()
     {
-        return view('consumptions.create');
+        $userId = Auth::id();
+        // dd($userId);
+        $consumptionFirst = Consumption::where('user_id', $userId)->orderBy('id', 'desc')->first();
+
+        return view('consumptions.create', [
+            'consumptionFirst' => $consumptionFirst
+        ]);
     }
 
     /**
@@ -36,14 +43,26 @@ class ConsumptionController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'water' => 'required|numeric|max_digits:5',
-                'electricity' => 'required|numeric|max_digits:6',
+                'water' => [
+                    'required',
+                    'numeric',
+                    'max_digits:5',
+                    'new_consumption:water',
+                ],
+                'electricity' => [
+                    'required',
+                    'numeric',
+                    'max_digits:6',
+                    'new_consumption:electricity',
+                ],
             ],
             [
                 'water.required' => 'Please enter consumption of water',
                 'water.max_digits' => 'Consumption of water must be max 5 digits',
+                'water.new_consumption' => 'Please enter greater than last one in water consumption field',
                 'electricity.required' => 'Please enter consumption of electricity',
-                'electricity.max_digits' => 'Consumption of water must be max 6 digits',
+                'electricity.max_digits' => 'Consumption of electricity must be max 6 digits',
+                'electricity.new_consumption' => 'Please enter greater than last one in electricity consumption field',
 
             ]
         );
@@ -53,7 +72,6 @@ class ConsumptionController extends Controller
             return redirect()->back()->withErrors($validator);
         }
 
-        // dd($request->user()->id);
         $consumption = new Consumption;
         $consumption->user_id = $request->user()->id;
         $consumption->date = $request->date;

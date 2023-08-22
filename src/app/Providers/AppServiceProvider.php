@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Consumption;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +21,20 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Validator::extend('new_consumption', function ($attribute, $value, $parameters, $validator) {
+        //     $userId = auth()->id();
+        //     $consumptionFirst = Consumption::where('user_id', $userId)->orderBy('id', 'desc')->first();
+
+        //     // Check if the new consumption is greater than the last one
+        //     return $consumptionFirst === null || $value > $consumptionFirst->water;
+        // });
+
+        Validator::extend('new_consumption', function ($attribute, $value, $parameters, $validator) {
+            $userId = auth()->id();
+            $columnName = $parameters[0];
+            $consumptionFirst = Consumption::where('user_id', $userId)->orderBy('id', 'desc')->first();
+
+            return $consumptionFirst === null || $value > $consumptionFirst->$columnName;
+        });
     }
 }
