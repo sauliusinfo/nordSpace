@@ -6,8 +6,10 @@
             <div class="col-md-3">
                 <h5 class="text-end">Add Consumption</h5>
 
-                <p>Last declared:<br>
-                    water - {{ $consumptionFirst->water }} | electricity - {{ $consumptionFirst->electricity }}</p>
+                <p>Last declared: <br>
+                    water - {{ $consumptionFirst ? $consumptionFirst->water : 0 }} |
+                    electricity - {{ $consumptionFirst ? $consumptionFirst->electricity : 0 }}
+                </p>
 
                 <form method="post" action="{{ route('consumptions-store') }}" enctype="multipart/form-data">
                     <div class="mb-3" data-bs-theme="dark">
@@ -20,12 +22,12 @@
                     <div class="mb-3" data-bs-theme="dark">
                         <label for="water">Water (currently last consumption)</label>
                         <input name="water" type="text" class="form-control"
-                            value="{{ old('water', $consumptionFirst->water) }}">
+                            value="{{ old('water', $consumptionFirst ? $consumptionFirst->water : 0) }}">
                     </div>
                     <div class="mb-3" data-bs-theme="dark">
                         <label for="electricity">Electricity (currently last consumption)</label>
                         <input name="electricity" type="text" class="form-control"
-                            value="{{ old('electricity', $consumptionFirst->electricity) }}">
+                            value="{{ old('electricity', $consumptionFirst ? $consumptionFirst->electricity : 0) }}">
                     </div>
                     <div class="mb-3" data-bs-theme="dark">
                         <label for="image">Upload Image</label>

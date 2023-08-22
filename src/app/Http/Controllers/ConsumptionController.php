@@ -14,7 +14,9 @@ class ConsumptionController extends Controller
      */
     public function index()
     {
-        $consumptions = Consumption::select('consumptions.*')->orderBy('id', 'asc')->paginate(5);
+        $userId = Auth::id();
+        // $consumptions = Consumption::select('consumptions.*')->orderBy('id', 'asc')->paginate(5);
+        $consumptions = Consumption::where('user_id', $userId)->orderBy('id', 'asc')->paginate(5);
 
         return view('consumptions.index', [
             'consumptions' => $consumptions
