@@ -21,14 +21,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Validator::extend('new_consumption', function ($attribute, $value, $parameters, $validator) {
-        //     $userId = auth()->id();
-        //     $consumptionFirst = Consumption::where('user_id', $userId)->orderBy('id', 'desc')->first();
-
-        //     // Check if the new consumption is greater than the last one
-        //     return $consumptionFirst === null || $value > $consumptionFirst->water;
-        // });
-
         Validator::extend('new_consumption', function ($attribute, $value, $parameters, $validator) {
             $userId = auth()->id();
             $columnName = $parameters[0];

@@ -45,6 +45,7 @@ class ConsumptionController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
+                'date' => 'required|date|after_or_equal:' . now()->toDateString(),
                 'water' => [
                     'required',
                     'numeric',
@@ -59,6 +60,7 @@ class ConsumptionController extends Controller
                 ],
             ],
             [
+                'date.after_or_equal' => 'Date must be greater or equal today',
                 'water.required' => 'Please enter consumption of water',
                 'water.max_digits' => 'Consumption of water must be max 5 digits',
                 'water.new_consumption' => 'Please enter greater than last one in water consumption field',
